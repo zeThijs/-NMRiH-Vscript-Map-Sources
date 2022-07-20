@@ -47,7 +47,7 @@ local model
 local sMyName = self.GetName()
 local hGibshooter = null
 local enablegibs    = true
-
+local gibsLeftToShoot = 0
 
 //-------sounds-------
 //"Wood_Furniture.Break"
@@ -112,9 +112,10 @@ function Allwehadtodoooo()  //handle hp change
         EmitSoundParamsOn(sndParams, self)
 
         if (enablegibs)
-            for (local i=0; i < gibsCount;i++)
-                youPickedTheWrongHouseFool()
-
+        {
+            gibsLeftToShoot += gibsCount
+            AddThinkToEnt(self, "youPickedTheWrongHouseFool")
+        }
         damagestage++
         if (damagestage>2)
             self.AcceptInput("Unlock", "", self, self)
@@ -131,12 +132,17 @@ function wastofollowthedamntrainnnnSeeGaye()    //do door breakage
 }
 
 function youPickedTheWrongHouseFool()       // do door gibs
-{
-    hGibshooter.AcceptInput( "AddOutput", "m_iGibs ", self, self ) //keyvalues get reset for some reason
-    hGibshooter.AcceptInput( "AddOutput", "m_flVelocity 50", self, self ) 
+{   //for individual gib shoots, do shoot on seperate gameframes using thinks
+    if (gibsLeftToShoot<=0) self.StopThink()
+    else
+    {
+        hGibshooter.AcceptInput( "AddOutput", "m_iGibs ", null, null ) //keyvalues get reset for some reason
+        hGibshooter.AcceptInput( "AddOutput", "m_flVelocity 50", null, null ) 
 
-    //randomnize doorpiece
-    local randomgib = RandomInt(0, (doorgibs.len() -1) )
-    hGibshooter.AcceptInput( "AddOutput", "shootmodel " + doorgibs[ randomgib ], self, self )
-    hGibshooter.AcceptInput( "Shoot", "", self, self )
+        //randomnize doorpiece
+        local randomgib = RandomInt(0, (doorgibs.len() -1) )
+        hGibshooter.AcceptInput( "AddOutput", "shootmodel " + doorgibs[ randomgib ], null, null )
+        hGibshooter.AcceptInput( "Shoot", "", null, null )
+        gibsLeftToShoot--
+    }
 }
