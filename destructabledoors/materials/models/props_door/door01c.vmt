@@ -1,0 +1,9 @@
+Patch
+{
+    include "materials\models\props_door\door01_shared.vmt"
+    insert
+    {
+        $basetexture    "models\props_door\door01c"
+        $bumpmap        "models\props_door\door01_normal"
+    }
+}
